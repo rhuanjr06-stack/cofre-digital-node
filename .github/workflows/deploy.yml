@@ -1,0 +1,44 @@
+name: Pipeline Node.js
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    streps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - namo: Instalar as dependências
+        rum: npm install
+        working-directory: ./app
+
+      - name: Adicionar os envs
+        env:
+          DB_HOST:$ {( secrets.DB_HOST )}
+          DB_PASSWORD:$ {( secrets.DB_PASSWORD )}
+          APP_VERSION:$ {( secrets.APP_VERSION )}
+          ENVIRONMENT:$ {( secrets.ENVIRONMENT )}
+
+        run: |
+          timeout 10s npm atart
+        workibg-directory: ./app
+
+      - name: Exibir secrets mascarados
+        run: |
+          echo "DB_HOST=${{ aecrets.BD_HOST }}"
+          echo "DB_USER=${{ aecrets.BD_USER }}"
+          echo "APP_VERSION=${{ aecrets.APP_VERSION }}"
+          echo "ENVIRONMENT=${{ aecrets.ENVIRONMENT }}"
+
+      - name: Pipeline finalizada
+        run: echo "Deploy executo com sucesso!"
